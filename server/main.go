@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"net/url"
 	"os"
@@ -18,6 +19,20 @@ var cfg_paths = []string{"/etc/sendip.toml", "./sendip-server.toml"}
 
 var ip string
 var time_str string
+
+const static = `
+<!DOCTYPE html>
+[%s]: %s <button id="copy">Copy</button>
+<script>
+document.getElementById("copy").addEventListener("click", function() {
+	navigator.clipboard.writeText("%s").then(function() {
+		console.log('Copied IP address');
+	}, function(err) {
+		console.error('Could not copy IP address: ', err);
+	});
+});
+</script>
+`
 
 func get_ip(w http.ResponseWriter, r *http.Request) {
 	var err error
@@ -36,7 +51,8 @@ func get_ip(w http.ResponseWriter, r *http.Request) {
 }
 
 func show_ip(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("[" + time_str + "]: " + ip))
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	fmt.Fprintf(w, static, time_str, ip, ip)
 }
 
 func main() {
@@ -63,6 +79,6 @@ next_cfg:
 	}
 
 	http.HandleFunc("/", show_ip)
-	http.HandleFunc("/ip", get_ip)
+	http.HandleFunc("/sendip", get_ip)
 	http.ListenAndServe(":"+cfg.Port, nil)
 }

@@ -57,7 +57,7 @@ next_cfg:
 
 	ip := get_ip().String()
 	time_str := time.Now().Format("2 Jan 2006 15:04:05")
-	req_url := "http://" + cfg.Server + ":" + cfg.Port + "/ip?ip=" + url.QueryEscape(ip) + "&time=" + url.QueryEscape(time_str)
+	req_url := "http://" + cfg.Server + ":" + cfg.Port + "/sendip?ip=" + url.QueryEscape(ip) + "&time=" + url.QueryEscape(time_str)
 	_, err = http.Get(req_url)
 	if err != nil {
 		panic(err)
