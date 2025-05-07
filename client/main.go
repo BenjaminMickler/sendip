@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"log"
 	"net"
 	"net/http"
@@ -28,7 +29,12 @@ func get_ip() net.IP {
 }
 
 func main() {
-	cfg_file, err := os.ReadFile("/etc/sendip.toml")
+	cfg_path := "/boot/sendip.toml"
+	if _, err := os.Stat(cfg_path); errors.Is(err, os.ErrNotExist) {
+		cfg_path = "/etc/sendip.toml"
+	}
+
+	cfg_file, err := os.ReadFile(cfg_path)
 	if err != nil {
 		panic(err)
 	}
