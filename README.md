@@ -39,7 +39,6 @@ sudo systemctl enable --now sendip
 
 ## TODO
 
-- configurable port
 - authentication
 - multiple clients (with names)
 - timestamps

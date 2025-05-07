@@ -2,7 +2,16 @@ package main
 
 import (
 	"net/http"
+	"os"
+
+	"github.com/pelletier/go-toml/v2"
 )
+
+type Config struct {
+	Port string `toml:"port"`
+}
+
+var cfg Config
 
 var ip string
 
@@ -16,7 +25,19 @@ func show_ip(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	cfg_path := "/etc/sendip.toml"
+
+	cfg_file, err := os.ReadFile(cfg_path)
+	if err != nil {
+		panic(err)
+	}
+
+	err = toml.Unmarshal(cfg_file, &cfg)
+	if err != nil {
+		panic(err)
+	}
+
 	http.HandleFunc("/", show_ip)
 	http.HandleFunc("/ip", get_ip)
-	http.ListenAndServe(":4571", nil)
+	http.ListenAndServe(":"+cfg.Port, nil)
 }

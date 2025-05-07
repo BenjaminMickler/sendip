@@ -1,2 +1,5 @@
 sendip.toml
 .DS_Store
+main
+sendip
+bin/

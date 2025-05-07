@@ -11,7 +11,8 @@ import (
 )
 
 type Config struct {
-	IPAddr string `json:"ipaddr"`
+	IPAddr string `toml:"ipaddr"`
+	Port   string `toml:"port"`
 }
 
 var cfg Config
@@ -46,7 +47,7 @@ func main() {
 
 	ip := get_ip().String()
 
-	_, err = http.Get("http://" + cfg.IPAddr + ":4571/ip?ip=" + ip)
+	_, err = http.Get("http://" + cfg.IPAddr + ":" + cfg.Port + "/ip?ip=" + ip)
 	if err != nil {
 		panic(err)
 	}
