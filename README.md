@@ -43,7 +43,7 @@ Server:
 port = "PORT"
 ```
 
-SendIP will look for `/boot/sendip.toml` and `/etc/sendip.toml`. The name and location of the config file is not configurable.
+SendIP will look for `/boot/sendip.toml`, `/etc/sendip.toml` and `./sendip-[server OR client]` (for testing). The name and location of the config file is not configurable.
 
 Install the systemd service (same for client and server) and enable it.
 ```
@@ -61,4 +61,3 @@ TODO
 
 - authentication
 - multiple clients (with names)
-- timestamps

@@ -1,7 +1,9 @@
 package main
 
 import (
+	"errors"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/pelletier/go-toml/v2"
@@ -12,20 +14,43 @@ type Config struct {
 }
 
 var cfg Config
+var cfg_paths = []string{"/etc/sendip.toml", "./sendip-server.toml"}
 
 var ip string
+var time_str string
 
 func get_ip(w http.ResponseWriter, r *http.Request) {
-	ip = r.URL.Query().Get("ip")
-	println("IP Address received: ", ip)
+	var err error
+	ip, err = url.QueryUnescape(r.URL.Query().Get("ip"))
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	time_str, err = url.QueryUnescape(r.URL.Query().Get("time"))
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	println("[" + time_str + "]: " + ip)
+	w.WriteHeader(http.StatusOK)
 }
 
 func show_ip(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Last received IP address: " + ip))
+	w.Write([]byte("[" + time_str + "]: " + ip))
 }
 
 func main() {
-	cfg_path := "/etc/sendip.toml"
+	cfg_i := 0
+
+next_cfg:
+	cfg_path := cfg_paths[cfg_i]
+	if _, err := os.Stat(cfg_path); errors.Is(err, os.ErrNotExist) {
+		cfg_i += 1
+		if cfg_i >= len(cfg_paths) {
+			panic(errors.New("no config files found"))
+		}
+		goto next_cfg
+	}
 
 	cfg_file, err := os.ReadFile(cfg_path)
 	if err != nil {
