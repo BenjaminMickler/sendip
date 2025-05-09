@@ -13,8 +13,10 @@ import (
 )
 
 type Config struct {
-	Server string `toml:"server"`
-	Port   string `toml:"port"`
+	Host string `toml:"host"`
+	Port string `toml:"port"`
+	Name string `toml:"name"`
+	Key  string `toml:"key"`
 }
 
 var cfg Config
@@ -57,7 +59,7 @@ next_cfg:
 
 	ip := get_ip().String()
 	time_str := time.Now().Format("2 Jan 2006 15:04:05")
-	req_url := "http://" + cfg.Server + ":" + cfg.Port + "/sendip?ip=" + url.QueryEscape(ip) + "&time=" + url.QueryEscape(time_str)
+	req_url := "http://" + cfg.Host + ":" + cfg.Port + "/sendip?ip=" + url.QueryEscape(ip) + "&time=" + url.QueryEscape(time_str) + "&name=" + url.QueryEscape(cfg.Name) + "&key=" + url.QueryEscape(cfg.Key)
 	_, err = http.Get(req_url)
 	if err != nil {
 		panic(err)
