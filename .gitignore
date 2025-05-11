@@ -3,3 +3,4 @@ sendip.toml
 main
 sendip
 bin/
+release/

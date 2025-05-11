@@ -54,7 +54,7 @@ const entry_html = `
 <hr>
 `
 
-const config_template = `server = "%s"
+const config_template = `host = "%s"
 port = "%s"
 name = "${name_v}"
 key = "${key_v}"`

@@ -23,9 +23,15 @@ var cfg Config
 var cfg_paths = []string{"/boot/sendip.toml", "/boot/firmware/sendip.toml", "/etc/sendip.toml", "./sendip-client.toml"}
 
 func get_ip() net.IP {
+	err_count := 0
 	conn, err := net.Dial("udp", "8.8.8.8:80")
-	if err != nil {
-		log.Fatal(err)
+	for err != nil {
+		time.Sleep(2 * time.Second)
+		conn, err = net.Dial("udp", "8.8.8.8:80")
+		err_count += 1
+		if err_count > 10 {
+			log.Fatal(err)
+		}
 	}
 	defer conn.Close()
 
@@ -61,7 +67,13 @@ next_cfg:
 	time_str := time.Now().Format("2 Jan 2006 15:04:05")
 	req_url := "http://" + cfg.Host + ":" + cfg.Port + "/sendip?ip=" + url.QueryEscape(ip) + "&time=" + url.QueryEscape(time_str) + "&name=" + url.QueryEscape(cfg.Name) + "&key=" + url.QueryEscape(cfg.Key)
 	_, err = http.Get(req_url)
-	if err != nil {
-		panic(err)
+	err_count := 0
+	for err != nil {
+		time.Sleep(2 * time.Second)
+		_, err = http.Get(req_url)
+		err_count += 1
+		if err_count > 10 {
+			log.Fatal(err)
+		}
 	}
 }
