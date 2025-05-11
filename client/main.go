@@ -20,7 +20,7 @@ type Config struct {
 }
 
 var cfg Config
-var cfg_paths = []string{"/boot/sendip.toml", "/etc/sendip.toml", "./sendip-client.toml"}
+var cfg_paths = []string{"/boot/sendip.toml", "/boot/firmware/sendip.toml", "/etc/sendip.toml", "./sendip-client.toml"}
 
 func get_ip() net.IP {
 	conn, err := net.Dial("udp", "8.8.8.8:80")

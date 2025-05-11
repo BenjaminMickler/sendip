@@ -3,11 +3,9 @@ Description=SendIP
 After=network.target
 
 [Service]
-Type=simple
-Restart=always
-RestartSec=1
-User=root
+Type=oneshot
 ExecStart=/usr/local/bin/sendip
+RemainAfterExit=true
 
 [Install]
 WantedBy=multi-user.target
