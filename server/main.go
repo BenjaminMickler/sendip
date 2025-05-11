@@ -34,6 +34,7 @@ var exit chan bool
 
 const static = `
 <!DOCTYPE html>
+<meta name="robots" content="noindex, nofollow">
 <script>
 function copy(text) {
 	navigator.clipboard.writeText(text).then(function() {
